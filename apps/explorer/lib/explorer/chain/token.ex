@@ -22,7 +22,7 @@ defmodule Explorer.Chain.Token do
   import Ecto.{Changeset, Query}
 
   alias Ecto.Changeset
-  alias Explorer.Chain.{Address, Hash, Token, TokenTransfer}
+  alias Explorer.Chain.{Address, Hash, Token}
 
   @typedoc """
   * `:name` - Name of the token
@@ -87,10 +87,23 @@ defmodule Explorer.Chain.Token do
     end
   end
 
-  def join_with_transfers(queryable \\ Token) do
+  def join_with_transfers(address_hash, queryable \\ Token) do
+    # Use a CTE so that postgres filters the token_transfers table by the to_address_hash and from_address_hash first.
+    # Otherwise, it will also filter it by token_contract_address_hash, and this makes the query prohibitively slow.
     from(
       t in queryable,
-      join: tt in TokenTransfer,
+      join:
+        tt in fragment(
+          """
+          WITH tt AS (
+            SELECT *
+            FROM token_transfers
+            WHERE token_transfers."to_address_hash" = ?  OR token_transfers."from_address_hash" = ?
+          ) SELECT * FROM tt
+          """,
+          ^address_hash.bytes,
+          ^address_hash.bytes
+        ),
       on: tt.token_contract_address_hash == t.contract_address_hash
     )
   end
