@@ -65,14 +65,14 @@
             </dl>
 
             <!-- Nonce -->
-            <dl class="row mb-0">
+            <dl class="row">
               <dt class="col-sm-3 text-muted"> <%= gettext "Nonce" %> </dt>
               <dd class="col-sm-9"> <%= to_string(@block.nonce) %> </dd>
             </dl>
 
             <%= if length(@block.uncle_relations) > 0 do %>
               <!-- Uncles -->
-              <dl class="row mt-3 mb-0">
+              <dl class="row mt-3">
                 <dt class="col-sm-3 text-muted"> <%= gettext "Uncles" %> </dt>
                 <dd class="col-sm-9">
                   <%= for {relation, index} <- Enum.with_index(@block.uncle_relations) do %>
@@ -87,6 +87,21 @@
                 </dd>
               </dl>
             <% end %>
+
+            <dl class="row">
+              <dt class="col-sm-3 text-muted"><%= gettext "Gas Used" %></dt>
+              <dt class="col-sm-9">
+                <%= @block.gas_used |> Cldr.Number.to_string! %>
+                <span class="text-muted"> (<%= (Decimal.to_integer(@block.gas_used) / Decimal.to_integer(@block.gas_limit)) |> Cldr.Number.to_string!(format: "#.#%") %>) </span>
+              </dt>
+            </dl>
+
+            <dl class="row mb-0">
+              <dt class="col-sm-3 text-muted"><%= gettext "Gas Limit" %></dt>
+              <dt class="col-sm-9">
+                <%= Cldr.Number.to_string!(@block.gas_limit) %>
+              </dt>
+            </dl>
           <% end %>
         </div>
       </div>
@@ -112,19 +127,33 @@
         </div>
       </div>
 
-      <!-- Gas -->
+      <!-- Validator Reward -->
       <div class="card flex-grow-1 ml-0 ml-md-5 ml-lg-0">
         <div class="card-body">
-          <h2 class="card-title"> <%= gettext "Gas Used" %> </h2>
-          <div class="text-right">
-            <!-- Gas Used -->
-            <h3>
-              <%= @block.gas_used |> Cldr.Number.to_string! %>
-              <span class="text-muted"> (<%= (Decimal.to_integer(@block.gas_used) / Decimal.to_integer(@block.gas_limit)) |> Cldr.Number.to_string!(format: "#.#%") %>) </span>
-            </h3>
-            <!-- Gas Limit -->
-            <span class="text-muted"> <%= @block.gas_limit |> Cldr.Number.to_string! %> <%= gettext "Gas Limit" %> </span>
-          </div>
+          <h2 class="card-title"> <%= gettext "Block Rewards" %> </h2>
+
+          <dl class="row">
+            <dt class="col-sm-5 text-muted"><%= gettext "Validator Reward" %></dt>
+            <dt class="col-sm-7">
+              <%= formatted_reward(@validator_reward.reward) %>
+            </dt>
+          </dl>
+
+          <%= if @uncle_reward != nil do %>
+            <dl class="row">
+              <dt class="col-sm-5 text-muted"><%= gettext "Uncle Reward" %></dt>
+              <dt class="col-sm-7">
+                <%= formatted_reward(@uncle_reward.reward) %>
+              </dt>
+            </dl>
+          <% end %>
+
+          <dl class="row">
+            <dt class="col-sm-5 text-muted"><%= gettext "Emission Funds" %></dt>
+            <dt class="col-sm-7">
+              <%= formatted_reward(@emission_funds.reward) %>
+            </dt>
+          </dl>
         </div>
       </div>
     </div>

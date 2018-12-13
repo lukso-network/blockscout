@@ -38,7 +38,7 @@ defmodule Explorer.Chain do
     Wei
   }
 
-  alias Explorer.Chain.Block.EmissionReward
+  alias Explorer.Chain.Block.{EmissionReward, Reward}
   alias Explorer.{PagingOptions, Repo}
 
   alias Explorer.Counters.{
@@ -2137,5 +2137,35 @@ defmodule Explorer.Chain do
       )
 
     Repo.all(query, timeout: :infinity)
+  end
+
+  def block_hash_to_validator_reward(block_hash) do
+    query =
+      from(
+        r in Reward,
+        where: r.block_hash == ^block_hash and r.address_type == ^:validator
+      )
+
+    Repo.one(query)
+  end
+
+  def block_hash_to_emission_funds(block_hash) do
+    query =
+      from(
+        r in Reward,
+        where: r.block_hash == ^block_hash and r.address_type == ^:emission_funds
+      )
+
+    Repo.one(query)
+  end
+
+  def block_hash_to_uncle_reward(block_hash) do
+    query =
+      from(
+        r in Reward,
+        where: r.block_hash == ^block_hash and r.address_type == ^:uncle
+      )
+
+    Repo.one(query)
   end
 end

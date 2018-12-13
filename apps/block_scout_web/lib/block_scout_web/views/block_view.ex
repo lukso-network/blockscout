@@ -46,4 +46,11 @@ defmodule BlockScoutWeb.BlockView do
   def formatted_timestamp(%Block{timestamp: timestamp}) do
     Timex.format!(timestamp, "%b-%d-%Y %H:%M:%S %p %Z", :strftime)
   end
+
+  def formatted_reward(reward) do
+    {:ok, decimal} = Wei.dump(reward)
+
+    decimal
+    |> Cldr.Number.to_string!()
+  end
 end

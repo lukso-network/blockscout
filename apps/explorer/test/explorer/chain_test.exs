@@ -3175,4 +3175,34 @@ defmodule Explorer.ChainTest do
                [block2_with_invalid_consensus.number, block8_with_invalid_consensus.number]
     end
   end
+
+  describe "block_hash_to_validator_reward/1" do
+    test "returns the block validators info" do
+      block = insert(:block)
+
+      reward = insert(:reward, address_hash: block.miner_hash, block_hash: block.hash, address_type: :validator)
+
+      assert Chain.block_hash_to_validator_reward(block.hash) == reward
+    end
+  end
+
+  describe "block_hash_to_emission_funds/1" do
+    test "returns the block validators info" do
+      block = insert(:block)
+
+      reward = insert(:reward, address_hash: block.miner_hash, block_hash: block.hash, address_type: :emission_funds)
+
+      assert Chain.block_hash_to_emission_funds(block.hash) == reward
+    end
+  end
+
+  describe "block_hash_to_uncle_reward/1" do
+    test "returns the block validators info" do
+      block = insert(:block)
+
+      reward = insert(:reward, address_hash: block.miner_hash, block_hash: block.hash, address_type: :uncle)
+
+      assert Chain.block_hash_to_uncle_reward(block.hash) == reward
+    end
+  end
 end

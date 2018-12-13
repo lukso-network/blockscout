@@ -41,7 +41,10 @@ defmodule BlockScoutWeb.BlockTransactionController do
         block: block,
         block_transaction_count: block_transaction_count,
         next_page_params: next_page_params(next_page, transactions, params),
-        transactions: transactions
+        transactions: transactions,
+        validator_reward: Chain.block_hash_to_validator_reward(block.hash),
+        uncle_reward: Chain.block_hash_to_uncle_reward(block.hash),
+        emission_funds: Chain.block_hash_to_emission_funds(block.hash)
       )
     else
       {:error, {:invalid, :hash}} ->
