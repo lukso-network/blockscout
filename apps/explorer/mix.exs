@@ -60,6 +60,7 @@ defmodule Explorer.Mixfile do
   defp deps do
     [
       {:bcrypt_elixir, "~> 1.0"},
+      {:poison, "~> 3.1"},
       # benchmark optimizations
       {:benchee, "~> 0.13.1", only: :test},
       # CSV output for benchee
