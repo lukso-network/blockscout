@@ -91,7 +91,7 @@ defmodule Explorer.Chain.Address.CoinBalance do
   """
   def balances_by_day(address_hash) do
     CoinBalance
-    |> join(:inner, [cb], b in Block, cb.block_number == b.number)
+    |> join(:inner, [cb], b in Block, on: cb.block_number == b.number)
     |> where([cb], cb.address_hash == ^address_hash)
     |> where([cb, b], b.timestamp >= fragment("date_trunc('day', now()) - interval '90 days'"))
     |> group_by([cb, b], fragment("date_trunc('day', ?)", b.timestamp))

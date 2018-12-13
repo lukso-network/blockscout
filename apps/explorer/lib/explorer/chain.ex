@@ -280,7 +280,7 @@ defmodule Explorer.Chain do
   """
   @spec average_block_time :: %Timex.Duration{}
   def average_block_time do
-    {:ok, %Postgrex.Result{rows: [[rows]]}} =
+    {:ok, %Postgrex.Result{rows: [[clock]]}} =
       SQL.query(
         Repo,
         """
@@ -294,9 +294,7 @@ defmodule Explorer.Chain do
         []
       )
 
-    {:ok, value} = Timex.Ecto.Time.load(rows)
-
-    value
+    Timex.Duration.from_clock(clock)
   end
 
   @doc """
