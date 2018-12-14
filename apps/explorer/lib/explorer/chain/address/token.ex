@@ -16,7 +16,8 @@ defmodule Explorer.Chain.Address.Token do
   import Ecto.Query
 
   alias Explorer.{Chain, PagingOptions}
-  alias Explorer.Chain.{Address, Address.CurrentTokenBalance, Hash}
+  alias Explorer.Chain.{Address, Hash}
+  alias Explorer.Chain.Address.CurrentTokenBalance
 
   @enforce_keys [:contract_address_hash, :inserted_at, :name, :symbol, :balance, :decimals, :type, :transfers_count]
   defstruct @enforce_keys
