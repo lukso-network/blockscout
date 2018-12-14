@@ -87,9 +87,13 @@ defmodule Explorer.Chain.Token do
     end
   end
 
+  @doc """
+  Joins with the the token_transfers table, filtering the transfers that involve the given address.
+
+  It uses a CTE so that postgres filters the token_transfers table by the to_address_hash and from_address_hash first.
+  Otherwise, it may also filter it by token_contract_address_hash, and this would make the query prohibitively slow.
+  """
   def join_with_transfers(address_hash, queryable \\ Token) do
-    # Use a CTE so that postgres filters the token_transfers table by the to_address_hash and from_address_hash first.
-    # Otherwise, it will also filter it by token_contract_address_hash, and this makes the query prohibitively slow.
     from(
       t in queryable,
       join:
