@@ -11,15 +11,15 @@ config :logger, :indexer_token_balances,
   path: Path.absname("logs/dev/indexer/token_balances/error.log"),
   metadata_filter: [fetcher: :token_balances]
 
-variant =
-  if is_nil(System.get_env("ETHEREUM_JSONRPC_VARIANT")) do
-    "ganache"
-  else
-    System.get_env("ETHEREUM_JSONRPC_VARIANT")
-    |> String.split(".")
-    |> List.last()
-    |> String.downcase()
-  end
+variant = "parity"
+  #if is_nil(System.get_env("ETHEREUM_JSONRPC_VARIANT")) do
+  #  "ganache"
+  #else
+  #  System.get_env("ETHEREUM_JSONRPC_VARIANT")
+  #  |> String.split(".")
+  #  |> List.last()
+  #  |> String.downcase()
+  #end
 
 # Import variant specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
